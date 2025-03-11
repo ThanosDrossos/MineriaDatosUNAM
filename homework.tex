@@ -1,0 +1,255 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+
+%----- Configuración del estilo del documento------%
+\usepackage{epsfig,graphicx}
+\usepackage[left=2cm,right=2cm,top=2.3cm,bottom=2.3cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\cfoot{}
+\fancyhead[L]{Thanos Drossos \\ Minería de Datos en la Práctica}
+\fancyfoot[R]{{Página \thepage \hspace{1pt} de \pageref{LastPage}}}
+
+\usepackage{hyperref}
+
+\usepackage[spanish]{babel}
+\usepackage{apacite}
+\usepackage{xurl}
+
+%------ Paquetes matemáticos básicos --------%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{parskip}
+
+\usepackage{float}
+
+\usepackage[acronyms,ucmark=true, nogroupskip, nonumberlist]{glossaries}
+
+\makenoidxglossaries
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\begin{document}
+
+%------ Encabezado -------- %
+
+\begin{center}
+    \begin{minipage}{3cm}
+    	\begin{center}
+    		\includegraphics[height=3.3cm]{logo_unam.png}
+    	\end{center}
+    \end{minipage}\hfill
+    \begin{minipage}{10cm}
+    	\begin{center}
+    	\textbf{\large Universidad Nacional Autónoma de México}\\[0.1cm]
+        \textbf{IIMAS}\\[0.1cm]
+        \textbf{Minería de Datos en la Práctica \\ Dr. Christopher Rhode Stephens}\\[0.1cm]
+        Thanos Drossos\\[0.1cm]
+        27.02.2025
+        \vspace{1em}
+    	\end{center}
+    \end{minipage}\hfill
+    \begin{minipage}{3cm}
+    	\begin{center}
+    		\includegraphics[height=3.8cm]{Logo_FC.jpg}
+    	\end{center}
+        \vspace{1em}
+    \end{minipage}
+    \rule{17.5cm}{0.3mm}
+\end{center}
+
+%------ Fin de encabezado -------- %
+
+\section{Derivación de la Desviación Estándar}
+
+La desviación estándar mide la dispersión típica de los resultados en un experimento aleatorio. Para derivarla en el contexto de experimentos de Bernoulli (por ejemplo, lanzar una moneda varias veces), consideremos primero un único ensayo de Bernoulli con probabilidad de éxito $p$ (éxito puede ser ``águila'' en el caso de una moneda). 
+
+En un solo ensayo Bernoulli, la variable $X$ toma valor 1 (éxito) con probabilidad $p$ y 0 (fracaso) con probabilidad $1-p$. La varianza de $X$ es 
+
+$$
+\mathrm{Var}(X) = p(1-p)\,,
+$$ 
+
+pues $\mathrm{Var}(X) = E[X^2] - (E[X])^2$ y $E[X] = p$, $E[X^2] = p$ (ya que $X^2 = X$ para $X$ binario). Así, $\mathrm{Var}(X) = p - p^2 = p(1-p)$.
+
+Ahora, si realizamos $N$ ensayos de Bernoulli independientes (por ejemplo, lanzamos una moneda $N$ veces), definamos la variable aleatoria $Y$ como el número de éxitos (águilas) obtenidos en esos $N$ ensayos. $Y$ sigue una distribución binomial $B(N, p)$ con media $E[Y] = Np$. La varianza de $Y$ es la suma de las varianzas de cada ensayo independiente (puesto que los ensayos son idénticos e independientes): 
+
+$$
+\mathrm{Var}(Y) = N \, \mathrm{Var}(X) = N \, p(1-p)\,. 
+$$ 
+
+Finalmente, la desviación estándar $\sigma$ es la raíz cuadrada de la varianza:
+
+$$
+\sigma = \sqrt{\mathrm{Var}(Y)} = \sqrt{N\,p(1-p)}\,.
+$$
+
+En particular, para el caso de una moneda justa ($p=0.5$), se obtiene $\sigma = \sqrt{N \cdot 0.5 \cdot 0.5} = \sqrt{\frac{N}{4}} = \frac{\sqrt{N}}{2}$. Esto indica que la dispersión típica del número de águilas crece con la raíz del número de lanzamientos.
+
+\section{Cálculo e Interpretación de Probabilidades}
+
+Consideremos ahora algunos casos específicos de $N$ lanzamientos de una moneda justa ($p=0.5$) y calculemos las probabilidades exactas de obtener $n$ éxitos (águilas) en esos $N$ ensayos. Utilizamos la fórmula de la distribución binomial simplificada ya que $p=0.5$ y $(1-p)=0.5$: 
+
+\[ 
+P(\text{obtener } n \text{ águilas en } N \text{ lanzamientos}) = \binom{N}{\,n\,} (0.5)^N, 
+\] 
+
+A continuación se listan los casos solicitados:
+
+\begin{itemize}
+  \item Caso $N=1$: Hay sólo dos resultados posibles:
+    - $P(n=0)$ (cero águilas, es decir, sello) $= \binom{1}{0}(0.5)^1 = 0.5$.
+    - $P(n=1)$ (una águila) $= \binom{1}{1}(0.5)^1 = 0.5$.
+    
+    Interpretación: Con un solo lanzamiento, la probabilidad de águila o sello es 50\% cada una. La distribución es trivialmente simétrica y la desviación estándar en este caso es $\sqrt{1\cdot0.5\cdot0.5}=0.5$, aunque con una sola prueba esto tiene poco sentido práctico.
+    
+  \item Caso $N=2$: Posibles valores $n=0,1,2$:
+  \begin{itemize}
+    \item $P(n=0) = \binom{2}{0}(0.5)^2 = 0.25$ (0 águilas, es decir, 2 sellos).
+    \item $P(n=1) = \binom{2}{1}(0.5)^2 = 0.50$ (1 águila y 1 sello).
+    \item $P(n=2) = \binom{2}{2}(0.5)^2 = 0.25$ (2 águilas).
+  \end{itemize}
+    
+    Interpretación: La distribución de probabilidad para $N=2$ es: 25\% de probabilidad de obtener 0 águilas, 50\% de obtener 1 águila, 25\% de obtener 2 águilas. Es simétrica alrededor de $n=1$, que es el valor esperado $Np=1$. La desviación estándar $\sigma=\sqrt{2\cdot0.5\cdot0.5}\approx0.707$ refleja esta dispersión. Aunque podemos intentar una aproximación normal, con tan pocas pruebas la distribución discreta no se asemeja bien a una curva continua.
+    
+  \item Caso $N=5$: Posibles $n=0,1,2,3,4,5$. Podemos calcular:
+  \begin{itemize}
+    \item $P(n=0) = \binom{5}{0}(0.5)^5 = 0.03125$ (aprox. 3.13\%).
+    \item $P(n=1) = \binom{5}{1}(0.5)^5 = 0.15625$ (15.63\%).
+    \item $P(n=2) = \binom{5}{2}(0.5)^5 = 0.3125$  (31.25\%).
+    \item $P(n=3) = \binom{5}{3}(0.5)^5 = 0.3125$  (31.25\%).
+    \item $P(n=4) = \binom{5}{4}(0.5)^5 = 0.15625$ (15.63\%).
+    \item $P(n=5) = \binom{5}{5}(0.5)^5 = 0.03125$ (3.13\%).
+  \end{itemize}
+
+    
+    Interpretación: La distribución es perfectamente simétrica alrededor de $n=2.5$ (el valor esperado $Np=2.5$; en la práctica los valores más probables son 2 o 3 éxitos, cada uno con ~31.3\% de probabilidad). Resultados extremos como $n=0$ o $n=5$ son poco probables (~3\%). Con $N=5$ la aproximación normal aún no es muy precisa, pero comenzamos a ver una forma aproximadamente acampanada en las probabilidades.
+    
+  \item Caso $N=100$: Aquí $n$ puede variar de 0 a 100, pero analizaremos casos puntuales $n=\{30,\,40,\,45,\,50,\,55,\,60,\,70\}$:
+  \begin{itemize}
+      \item $n=50$: Este es el valor esperado ($Np=50$) y de hecho es el caso más probable. $P(n=50)$ es aproximadamente $7.96\%$.  
+    \item $n=45$ o $n=55$: Estos valores están a $5$ de distancia del valor esperado (es decir, a alrededor de $1$ desviación estándar, ya que $\sigma=\sqrt{100\cdot0.25}=5$). Cada uno tiene una probabilidad del orden de ~$5\%$. Por ejemplo, $P(n=45)\approx4.8\%$ (lo mismo para $P(n=55)$ por simetría).
+    \item $n=40$ o $n=60$: Estos están a $10$ del centro (aprox. $2\sigma$ de la media). La probabilidad de exactamente 40 águilas (o 60) es mucho menor, alrededor de $1.1\%$ cada una.
+    \item $n=30$ o $n=70$: Estos casos extremos se alejan $20$ del valor esperado (unos $4\sigma$ de distancia, dado que $4\sigma = 20$ en este caso). La probabilidad de obtener exactamente 30 águilas (o 70) es prácticamente nula, del orden de $2\times10^{-5}$ (0.002\%). En otras palabras, sería extremadamente raro observar sólo 30 águilas o hasta 70 águilas en 100 lanzamientos de una moneda justa.
+  \end{itemize}
+    
+    
+    Interpretación: Para $N=100$, la distribución de $n$ es muy cercana a una distribución normal debido al número grande de pruebas. Vemos que la mayoría de la probabilidad está concentrada cerca de $n=50$, y caen rápidamente las probabilidades a medida que nos alejamos del centro. Valores a 1 desviación estándar de la media (aprox. $45$ o $55$ águilas) aún ocurren con cierta frecuencia (5\% cada uno), a 2$\sigma$ (~$40$ o $60$) son raros (~1\% cada uno) y a 4$\sigma$ (~$30$ o $70$) son prácticamente imposibles bajo la hipótesis de moneda justa.
+    
+  \item Caso $N=1000$: Ahora $N$ es muy grande. El valor esperado es $Np = 500$ águilas, con $\sigma = \sqrt{1000\cdot0.25}\approx 15.81$. Un caso extremo como $n=10$ es tremendamente improbable. De hecho, obtener solo 10 águilas de 1000 lanzamientos cuando se espera alrededor de 500 es un suceso de unas $31$ desviaciones estándar por debajo de la media (ya que $(210-1000)/\sqrt{1000}\approx -31$; ver ecuación abajo). La probabilidad exacta $P(n=10)$ es astronómicamente pequeña (del orden de $10^{-278}$). En la práctica, un resultado así nunca ocurriría si la moneda es justa; observar $n=10$ en 1000 tiradas sería clara evidencia de que la moneda no es justa.
+\end{itemize}
+
+Aproximación normal vs cálculos exactos: En general, la aproximación por una distribución normal es válida cuando $N$ es suficientemente grande y la probabilidad $p$ no está demasiado cerca de 0 o 1. Una regla común es que $Np \ge 5$ y $N(1-p) \ge 5$. Para nuestros casos:
+- En $N=1,2,5$, la aproximación normal no es adecuada (las distribuciones son muy discretas y asimétricas para valores tan pequeños de $N$).
+- Para $N=100$ con $p=0.5$, tanto $Np=50$ como $N(1-p)=50$ son grandes; la distribución binomial es aproximadamente simétrica y la curva de Gauss resultante (media 50, $\sigma=5$) se ajusta bastante bien a los valores reales, salvo diferencias por la discreción de $n$.
+- En $N=1000$, la forma binomial es aún más concentrada y suave; la distribución Normal($\mu=500$, $\sigma\approx15.81$) proporciona una excelente aproximación para la mayoría de los propósitos. Incluso los cálculos de colas (por ejemplo, $P(n<450)$) serían bien aproximados por la normal. Sin embargo, para eventos extremadamente raros (como $n=10$), cualquier método (exacto o aproximado) nos indicará esencialmente probabilidad cero.
+
+Para cuantificar la desviación de un resultado respecto a lo esperado, es útil expresar $n$ en términos de desviaciones estándar desde la media. Para $p=0.5$, la media esperada es $N/2$ y la desviación estándar $\sigma=\sqrt{N/4}$. Podemos definir el estadístico:
+
+\[ 
+E(n, N, p=0.5) = \frac{2n - N}{\sqrt{N}}\,,
+\]
+
+que equivale a $\frac{n - N/2}{\sigma}$, es decir, el número de $\sigma$ que $n$ se aleja de la media esperada $N/2$. Por ejemplo, en $N=100$, $n=60$ da $E = \frac{120-100}{10} = 2$ (2 desviaciones estándar sobre la media), mientras $n=30$ da $E = \frac{60-100}{10} = -4$ (4$\sigma$ por debajo). Cuando $|E(n,N,0.5)| \lesssim 2$, el resultado entra dentro de fluctuaciones normales esperables (aproximadamente el 95\% de los casos caen en ese rango para una distribución aproximadamente normal). Valores de $|E| \ge 3$ corresponden a eventos raros (<0.3\% de probabilidad cada cola), y valores $|E| \ge 4$ son extraordinariamente raros. En esas circunstancias, la aproximación normal y el cálculo exacto coincidirán en que la probabilidad es cercana a cero.
+
+\section{Análisis de Pruebas de Bernoulli para Dos Jugadores}
+
+Supongamos ahora un experimento con dos jugadores (llamémoslos jugador A y Jugador B), cada uno lanzando su propia moneda múltiples veces. Sea $N_1$ el número de lanzamientos del Jugador A y $N_2$ el del Jugador B, con $N_1 + N_2 = N$ total de lanzamientos entre ambos. En la hipótesis nula, asumimos que ambas monedas son justas ($p_A = p_B = 0.5$) y además consideramos el caso simétrico donde cada jugador lanza la misma cantidad de veces: $N_1 = N_2 = N/2$. (Esta igualdad no es necesaria para la hipótesis de justicia de las monedas, pero simplifica el análisis y representa la situación “justa” esperada si ambos juegan igual número de veces).
+
+Bajo esta hipótesis nula, el número de águilas que obtiene cada jugador debe seguir una distribución binomial $B(N/2,\,0.5)$. Ahora analizaremos, para distintos valores de $N$ total (repartido equitativamente entre los dos jugadores), qué rangos de resultados $n$ (águilas obtenidas por un jugador en sus $N/2$ lanzamientos) podrían generar sospecha de que una o ambas monedas no son justas. En otras palabras, buscamos resultados tan extremos que serían muy improbables si ambos jugadores estuvieran usando monedas equilibradas. A continuación, discutimos caso por caso:
+
+$N=10$ lanzamientos en total ($N_1=N_2=5$ cada jugador): Con sólo 5 lanzamientos por jugador, la variabilidad aleatoria es grande. El número esperado de águilas por jugador es $5 \cdot 0.5 = 2.5$, así que típicamente veríamos 2 o 3 águilas cada uno. ¿Qué resultados podrían levantar sospechas? Si uno de los jugadores obtiene 0 águilas de 5 (todos sellos) o 5 águilas de 5 (todos águilas), sería un resultado llamativo. La probabilidad de 5 águilas en 5 lanzamientos con moneda justa es $(0.5)^5 = 3.125\%$ (lo mismo para 0 águilas). Este ~3\% no es extremadamente bajo, pero es inusual; si viéramos que un jugador logra 5/5 águilas podríamos empezar a sospechar levemente que su moneda podría estar cargada a favor de águilas (o que la del otro jugador está cargada a sellos si fuera 0/5). Sin embargo, dado el pequeño número de pruebas, no es una evidencia sólida: tal racha podría ocurrir ocasionalmente por azar. Resultados menos extremos, como 1 águila de 5 (20\%) o 4 águilas de 5 (~31\%), no serían muy sorprendentes en 5 tiros y por tanto no justificarían sospecha. En resumen, con $N=10$ (5 por jugador) solo los resultados absolutamente extremos (0 o 5 éxitos) podrían empezar a levantar una ceja, pero incluso estos podrían atribuirse a la suerte con relativa frecuencia.
+  
+$N=50$ lanzamientos en total ($N_1=N_2=25$ cada jugador): Ahora cada jugador lanza 25 veces. El número esperado de águilas por jugador es $12.5$, con una desviación estándar de $\sqrt{25 \cdot 0.5 \cdot 0.5} = 2.5$. Típicamente esperaríamos que cada jugador obtenga en torno a 10, 12, 15 águilas, etc. ¿Cuándo sospecharíamos? Buscamos resultados inusuales en la distribución $B(25,0.5)$. Por ejemplo:
+    \begin{itemize}
+        \item Caso extremo: Si un jugador obtiene 25 águilas de 25 (o, inversamente, 0 águilas de 25), la probabilidad bajo la hipótesis nula es $(0.5)^{25} \approx 3 \times 10^{-8}$, es decir, $0.000003\%$. Un suceso así es tan increíblemente raro que prácticamente podríamos asegurar que algo anda mal (al menos una de las monedas no es justa) si ocurriera un 25/25 o 0/25.
+        \item Caso muy raro: Resultados como 20 águilas de 25 (80\% de éxitos) o por el otro lado 5 águilas de 25 (20\% de éxitos) también serían extremadamente inusuales con monedas justas. La probabilidad de 20 o más águilas (o $\le5$ águilas) en 25 lanzamientos es del orden de $10^{-4}$ o menor (menos de 0.01\%). Cualquiera de esos resultados (un jugador sacando 5 o menos águilas, o 20 o más águilas) nos haría sospechar fuertemente de la equidad de una de las monedas.
+        \item Caso moderadamente raro: Incluso resultados como 17-18 águilas de 25 (o su contraparte baja 7-8 águilas de 25) están en el límite de lo esperable. Por ejemplo, obtener $\le 8$ águilas de 25 tiene una probabilidad acumulada de alrededor del $5\%$ (similar para $\ge 17$ águilas). Es decir, si uno de los jugadores logra sólo 8 águilas (32\%) o menos, eso ocurriría solo en 1 de cada 20 partidas aproximadamente por pura casualidad. Un criterio común (nivel de significancia 5\%) podría llevarnos a empezar a dudar de la moneda si vemos 8 o menos águilas (o 17 o más) en 25 tiros. Aunque no es una “prueba” concluyente de fraude, sí nos pone en alerta.
+    \end{itemize}
+    
+    En resumen, con $N=50$ total (25 cada uno), comenzaríamos a sospechar si uno de los jugadores se desvía mucho del ~50\% de éxitos. Por debajo de ~8 águilas (32\%) o por encima de ~17 águilas (68\%) en 25 lanzamientos, hay motivo de sospecha. Y ciertamente resultados más extremos como 5 o 20 águilas (o más extremos aún) prácticamente confirmarían que algo anda mal con esa moneda.
+  
+$N=100$ lanzamientos en total ($N_1=N_2=50$ cada jugador): Ahora cada jugador lanza 50 veces. El número esperado por jugador es 25 águilas, con desviación estándar $\sqrt{50 \cdot 0.25} \approx 3.54$. La distribución de resultados individuales $B(50,0.5)$ es aún más concentrada en torno al 50\%. 
+    - Podemos calcular que aproximadamente el 95\% de las veces, un jugador con moneda justa obtendrá entre ~18 y ~32 águilas en 50 lanzamientos (ya que 18 y 32 son alrededor de $\pm2\sigma$ del valor medio 25). Resultados en este rango no serían sorprendentes.
+    - Empezaríamos a sospechar si vemos resultados fuera de ese rango. Por ejemplo, si un jugador obtiene 15 o menos águilas (30\% o menos) o 35 o más águilas (70\% o más), eso está alrededor de 3 desviaciones estándar del esperado. La probabilidad de $\le15$ águilas (o $\ge35$) en 50 lanzamientos es muy baja (del orden de 0.1\% o menos). Un jugador con sólo 15 éxitos de 50 o menos (o 35 o más) sería un hecho lo suficientemente raro como para indicar que posiblemente su moneda esté sesgada.
+    - Resultados extremos como 10 o menos águilas (20\% de éxitos) o 40 o más águilas (80\% de éxitos) prácticamente no ocurrirían por azar limpio (probabilidad ~$10^{-8}$ o menor, varios órdenes de magnitud por debajo del 0.01\%). Si viéramos algo así en 50 tiros, casi con certeza diríamos que esa moneda está truqueada.
+    
+    En resumen, para $N=100$ (50 cada jugador), toleraríamos variaciones moderadas (digamos 20–30 águilas por jugador, que es dentro de lo razonable). Pero una desviación muy marcada (por ejemplo, un jugador con $\le15$ águilas o $\ge35$ águilas) activaría alarmas serias de que una de las monedas no es justa. Cuanto más extremo el resultado, mayor la certeza de fraude: a partir de ~10/50 o ~40/50 éxitos, prácticamente aseguramos que hay trampa.
+
+Notemos además que si ambas monedas fueran deshonestas pero sesgadas en direcciones opuestas (por ejemplo, la del Jugador A cargada a dar muchas águilas y la del Jugador B cargada a dar pocos éxitos), podría ocurrir que el total combinado de águilas no luzca anormal, pero individualmente cada jugador presentaría un número de águilas sospechoso. Por eso es importante analizar los resultados de cada jugador por separado para identificar irregularidades en cada moneda.
+
+\section{Investigación del Origen del Fraude}
+
+Supongamos que, tras realizar una serie de lanzamientos, observamos un resultado que nos hace sospechar de posible fraude. El siguiente paso es determinar dónde podría estar el problema: ¿en la moneda del Jugador A, en la del Jugador B, o en ambas? Para ello, analizamos cada jugador por separado, comparando sus resultados con lo esperado bajo la hipótesis nula de monedas justas.
+
+Imaginemos que en un experimento con $N=100$ lanzamientos totales (50 cada jugador), los resultados fueron: el Jugador A obtuvo $n_1 = 29$ águilas, y el Jugador B obtuvo $n_2 = 24$ águilas. A primera vista, el total combinado es $29+24 = 53$ águilas de 100, cercano al 50\% global esperado, por lo que el conjunto total no luce extraño. Pero debemos comprobar individualmente cada moneda:
+
+\begin{itemize}
+
+
+
+    \item  Moneda 1 (Jugador A, $N_1=50$, $n_1=29$ águilas): Bajo la hipótesis $p_1=0.5$, la media esperada era 25. Una forma de medir la desviación es con el estadístico $E(n_1,50,0.5)$ definido antes. Para $n_1=29$:
+\[
+E(29, 50, 0.5) = \frac{2(29) - 50}{\sqrt{50}} = \frac{58 - 50}{7.07} \approx \frac{8}{7.07} \approx 1.13\,.
+\]
+Esto corresponde a 1.13 desviaciones estándar por encima de la media, un valor relativamente pequeño. La probabilidad de obtener 29 o más águilas en 50 lanzamientos con moneda justa no es muy baja; de hecho incluye casos como 29, 30, ... hasta 50. Podemos calcular la probabilidad de obtener un resultado tan o más extremo que 29 águilas, considerando ambos lados de la cola (es decir, $n_1 \ge 29$ o $n_1 \le 21$, que son simétricamente 4 por encima o debajo de lo esperado). Esa probabilidad resulta ser aproximadamente 32\%. Un número tan alto indica que no hay inconsistencia significativa: es totalmente plausible obtener 29 águilas por simple azar con una moneda justa (sucedería aproximadamente 1 de cada 3 veces en repetidos experimentos). En otras palabras, el resultado de la moneda 1 es consistente con la hipótesis de equidad.
+
+\item Moneda 2 (Jugador B, $N_2=50$, $n_2=24$ águilas): En este caso el jugador B obtuvo algo menos de lo esperado (24 en vez de 25). Calculando el estadístico:
+\[
+E(24, 50, 0.5) = \frac{2(24) - 50}{\sqrt{50}} = \frac{48 - 50}{7.07} \approx \frac{-2}{7.07} \approx -0.28\,,
+\]
+es decir, 0.28 desviaciones estándar por debajo de la media, prácticamente nada. La probabilidad de obtener un resultado tan extremo o más (24 o menos águilas, o simétricamente 26 o más) es altísima, alrededor del 88\%. Un resultado de 24 águilas en 50 lanzamientos es muy cercano a lo típico (sucede en casi 9 de cada 10 experimentos). La moneda 2 claramente no muestra señales de estar trucada dado este resultado, pues está exactamente dentro de lo esperado.
+
+\end{itemize}
+
+Dado este análisis, ambos valores $n_1=29$ y $n_2=24$ entran dentro de fluctuaciones aleatorias normales bajo la hipótesis nula. No hay evidencia fuerte para acusar a ninguna de las dos monedas de injusta en base a estos números solos. Si hubiéramos visto, por ejemplo, $n_1=40$ y $n_2=10$, la situación sería distinta (cada una de esas cifras por separado sería altamente improbable con monedas justas, sugeriendo que ambas monedas estarían sesgadas en direcciones opuestas). Pero con 29 y 24, las leves desviaciones (jugador A ligeramente por encima de 25, jugador B ligeramente por debajo) pueden atribuirse fácilmente al azar.
+
+Ahora supongamos que pese a la falta de certeza absoluta, mantenemos una ligera sospecha de que quizá una de las monedas pudiera tener un sesgo sutil. Una pregunta interesante es: si pudiéramos elegir el lado de la moneda en una apuesta contra uno de estos oponentes, ¿cuál de las dos monedas preferiríamos enfrentar?  Es decir, ¿cuál nos convendría más que use nuestro oponente si nosotros podemos escoger aguila o sol antes del lanzamiento?
+
+Dados los resultados observados:
+
+\begin{itemize}
+    \item La moneda 1 (Jugador A) produjo un 58\% de águilas (29 de 50), ligeramente por encima del 50\%. Si este patrón fuera indicativo de un sesgo real (aunque pequeño), sugeriría que la moneda 1 podría estar ligeramente cargada a águila.
+    \item La moneda 2 (Jugador B) produjo un 48\% de águilas (24 de 50), ligeramente por debajo del 50\%. Esto sugeriría un posible (aunque ínfimo) sesgo hacia sello en la moneda 2, aunque el resultado está tan cerca del equilibrio que probablemente la moneda 2 sea prácticamente justa.
+\end{itemize}
+
+Si tuviéramos que elegir, sería preferible enfrentarse a la moneda 1. Esto se debe a que la moneda 1 mostró una desviación algo mayor y posiblemente inclinada hacia águilas. En una apuesta, podríamos aprovechar eso eligiendo siempre aguila como nuestro lado de la moneda. Si en verdad la moneda 1 tuviese incluso un leve sesgo a favor de águilas, nuestras probabilidades de ganar serían ligeramente mayores del 50\% (quizá del orden de $\approx 58\%$ si asumimos ese sesgo persistentemente). En cambio, la moneda 2 no ofrece indicios de un sesgo aprovechable; parece esencialmente equilibrada, de modo que escoger águila o sello nos daría prácticamente 50\% de probabilidad de acierto. 
+
+En resumen, no hay evidencia fuerte de fraude con $n_1=29$ y $n_2=24$. Pero si forzosamente tuviéramos que sospechar de alguna moneda y escogerla como la del oponente, la moneda 1 sería la candidata, ya que mostró un ligero exceso de águilas. Así, nos convendría que el oponente use la moneda 1 y nosotros siempre apostar por "águila", maximizando nuestras chances de ganar asumiendo que ese pequeño sesgo a águilas fuera real.
+
+
+\bibliographystyle{apacite}
+%\bibliography{bib}
+
+\end{document}
